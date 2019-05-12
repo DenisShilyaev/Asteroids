@@ -1,13 +1,28 @@
 var canvas = document.getElementById ( 'game' );
 var context = canvas.getContext ( '2d' );
 
-var aster={x:0, y:300}; 
+var aster = []; 
+var fire = [];
+var expl = [];
+var timer = 0;
+var ship = {x:300, y:300};
 
 var fonImg = new Image ();
-fonImg.src = 'fon.png';
+fonImg.src = 'fon.jpg';
+
+var shipImg = new Image ();
+shipImg.src = 'ship.png';
+
+var fireImg = new Image ();
+fireImg.src = 'fire.png';
 
 var asterImg = new Image ();
 asterImg.src = 'aster.png';
+
+canvas.addEventListener ("mousemove", function(event) {
+	ship.x = event.offsetX-25;
+	ship.y = event.offsetY-13;
+});
 
 fonImg.onload = function () {
 	game ();
@@ -20,16 +35,62 @@ function game () { //Основной игровой цикл
 }
 
 function update () {
-	//Физика
-	aster.x=aster.x+10;
-	//Границы
-	if (aster.x>=550) aster.x=550;
+	timer++;
+	if(timer%10==0){ //Создание астеройдов
+		aster.push({
+			x:Math.random()*600, 
+			y:-50, 
+			dx:Math.random()*2-1, 
+			dy:Math.random()*2+2,
+			del:0})
+	}
+
+	if (timer%30==0) { //Выстрелы
+		fire.push({x:ship.x+10, y:ship.y, dx:0, dy:-5.2});
+		fire.push({x:ship.x+10, y:ship.y, dx:0.5, dy:-5});
+		fire.push({x:ship.x+10, y:ship.y, dx:-0.5, dy:-5});
+	}
+
+	for (i in fire) { //Перемещение пуль
+		fire[i].x = fire[i].x+fire[i].dx;
+		fire[i].y = fire[i].y+fire[i].dy;
+
+		if (fire[i].y<-30) fire.splice(i,1);
+	}
+
+	for (i in expl) {
+		expl[i].animx = expl[i].animx+0.3;
+		if (expl[i].animx>7) {expl[i].animy++; expl[i].animx = 0}
+		if (expl[i].animy>7) expl.splice (i,1);
+	}
+
+	for (i in aster) { //Физика
+		aster[i].x = aster[i].x+aster[i].dx;
+	 	aster[i].y = aster[i].y+aster[i].dy;
+
+		if (aster[i].x>=550 || aster[i].x < 0) aster[i].dx = -aster[i].dx; //Границы
+		if (aster[i].y>=600) aster.splice(i,1);
+
+		for (j in fire) {
+			if (Math.abs(aster[i].x+25-fire[j].x-15)<50 && Math.abs(aster[i].y-fire[j].y)<25) { //Если произошло столкновение  
+				expl.push({x:aster[i].x-25,y:aster[i].y-25, animx:0, animy:0});//Рисуем взрыв
+				aster[i].del = 1; //Помечаем астеройд на удаление
+				fire.splice(j,1); //Удаляем пулю
+				break;
+			}
+		}
+		if (aster[i].del == 1) aster.splice(i,1);
+	}
 }
 
 function render () {
 	context.drawImage (fonImg, 0, 0, 600, 600);
-	context.drawImage (asterImg, x, y, 50, 50);		
+	context.drawImage (shipImg, ship.x, ship.y);
+	for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
+	for (i in aster) context.drawImage (asterImg, aster[i].x, aster[i].y, 50, 50);
+	for (i in expl) context.drawImage(explImg, 128*Math.floor(expl[i].animx), 128*Math.floor(expl[i].animy), 128, 128, expl[i].x, expl[i].y, 100, 100);
 }
+
 
 var requestAnimFrame = (function () {
 	return window.requestAnimationFrame    || 
