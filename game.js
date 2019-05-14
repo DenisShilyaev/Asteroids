@@ -19,12 +19,15 @@ fireImg.src = 'fire.png';
 var asterImg = new Image ();
 asterImg.src = 'aster.png';
 
+var explImg = new Image ();
+explImg.src = 'expl.png';
+
 canvas.addEventListener ("mousemove", function(event) {
 	ship.x = event.offsetX-25;
 	ship.y = event.offsetY-13;
 });
 
-fonImg.onload = function () {
+explImg.onload = function () {
 	game ();
 }
 
@@ -36,16 +39,16 @@ function game () { //Основной игровой цикл
 
 function update () {
 	timer++;
-	if(timer%10==0){ //Создание астеройдов
+	if(timer%15==0){ //Создание астеройдов
 		aster.push({
-			x:Math.random()*600, 
+			x:Math.random()*800, 
 			y:-50, 
 			dx:Math.random()*2-1, 
 			dy:Math.random()*2+2,
 			del:0})
 	}
 
-	if (timer%30==0) { //Выстрелы
+	if (timer%20==0) { //Выстрелы
 		fire.push({x:ship.x+10, y:ship.y, dx:0, dy:-5.2});
 		fire.push({x:ship.x+10, y:ship.y, dx:0.5, dy:-5});
 		fire.push({x:ship.x+10, y:ship.y, dx:-0.5, dy:-5});
@@ -58,8 +61,8 @@ function update () {
 		if (fire[i].y<-30) fire.splice(i,1);
 	}
 
-	for (i in expl) {
-		expl[i].animx = expl[i].animx+0.3;
+	for (i in expl) { //Взрывы
+		expl[i].animx = expl[i].animx+0.5;
 		if (expl[i].animx>7) {expl[i].animy++; expl[i].animx = 0}
 		if (expl[i].animy>7) expl.splice (i,1);
 	}
@@ -68,12 +71,16 @@ function update () {
 		aster[i].x = aster[i].x+aster[i].dx;
 	 	aster[i].y = aster[i].y+aster[i].dy;
 
-		if (aster[i].x>=550 || aster[i].x < 0) aster[i].dx = -aster[i].dx; //Границы
-		if (aster[i].y>=600) aster.splice(i,1);
+		if (aster[i].x>=800 || aster[i].x < 0) aster[i].dx = -aster[i].dx; //Границы
+		if (aster[i].y>=900) aster.splice(i,1);
 
 		for (j in fire) {
 			if (Math.abs(aster[i].x+25-fire[j].x-15)<50 && Math.abs(aster[i].y-fire[j].y)<25) { //Если произошло столкновение  
-				expl.push({x:aster[i].x-25,y:aster[i].y-25, animx:0, animy:0});//Рисуем взрыв
+				expl.push({//Рисуем взрыв
+					x:aster[i].x-25,
+					y:aster[i].y-25, 
+					animx:0, 
+					animy:0});
 				aster[i].del = 1; //Помечаем астеройд на удаление
 				fire.splice(j,1); //Удаляем пулю
 				break;
@@ -84,11 +91,12 @@ function update () {
 }
 
 function render () {
-	context.drawImage (fonImg, 0, 0, 600, 600);
+	context.drawImage (fonImg, 0, 0, 900, 900);
 	context.drawImage (shipImg, ship.x, ship.y);
 	for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
-	for (i in aster) context.drawImage (asterImg, aster[i].x, aster[i].y, 50, 50);
-	for (i in expl) context.drawImage(explImg, 128*Math.floor(expl[i].animx), 128*Math.floor(expl[i].animy), 128, 128, expl[i].x, expl[i].y, 100, 100);
+	for (i in aster) context.drawImage (asterImg, aster[i].x, aster[i].y, 100, 100);
+	for (i in expl)//рисуем взрывы
+	context.drawImage(explImg, 128*Math.floor(expl[i].animx),128*Math.floor(expl[i].animy),128,128, expl[i].x, expl[i].y, 100, 100);
 }
 
 
