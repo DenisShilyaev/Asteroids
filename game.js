@@ -77,8 +77,8 @@ function update () {
 		for (j in fire) {
 			if (Math.abs(aster[i].x+25-fire[j].x-15)<50 && Math.abs(aster[i].y-fire[j].y)<25) { //Если произошло столкновение  
 				expl.push({//Рисуем взрыв
-					x:aster[i].x-25,
-					y:aster[i].y-25, 
+					x:aster[i].x-30,
+					y:aster[i].y-30, 
 					animx:0, 
 					animy:0});
 				aster[i].del = 1; //Помечаем астеройд на удаление
@@ -92,10 +92,11 @@ function update () {
 
 function render () {
 	context.drawImage (fonImg, 0, 0, 900, 900);
-	context.drawImage (shipImg, ship.x, ship.y);
+	context.drawImage (shipImg, ship.x, ship.y, 60, 80);
+	// for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
 	for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
 	for (i in aster) context.drawImage (asterImg, aster[i].x, aster[i].y, 100, 100);
-	for (i in expl)//рисуем взрывы
+	for (i in expl) //рисуем взрывы
 	context.drawImage(explImg, 128*Math.floor(expl[i].animx),128*Math.floor(expl[i].animy),128,128, expl[i].x, expl[i].y, 100, 100);
 }
 
