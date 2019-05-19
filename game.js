@@ -5,13 +5,16 @@ var aster = [];
 var fire = [];
 var expl = [];
 var timer = 0;
-var ship = {x:300, y:300};
+var ship = {x:300, y:300, animx:0,animy:0};
 
 var fonImg = new Image ();
 fonImg.src = 'fon.jpg';
 
 var shipImg = new Image ();
 shipImg.src = 'ship.png';
+
+var shieldImg 	= new Image();
+shieldImg.src = 'shield.png';
 
 var fireImg = new Image ();
 fireImg.src = 'fire.png';
@@ -67,6 +70,13 @@ function update () {
 		if (expl[i].animy>7) expl.splice (i,1);
 	}
 
+	//анимация щита
+	ship.animx=ship.animx+1;
+	if (ship.animx>4) {ship.animy++; ship.animx=0}
+	if (ship.animy>3) {
+	ship.animx=0; ship.animy=0;
+	}
+
 	for (i in aster) { //Физика
 		aster[i].x = aster[i].x+aster[i].dx;
 	 	aster[i].y = aster[i].y+aster[i].dy;
@@ -93,7 +103,8 @@ function update () {
 function render () {
 	context.drawImage (fonImg, 0, 0, 900, 900);
 	context.drawImage (shipImg, ship.x, ship.y, 60, 80);
-	// for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
+	//Щит
+	context.drawImage(shieldImg, 192*Math.floor(ship.animx),192*Math.floor(ship.animy),192,192, ship.x-32, ship.y-20, 120, 140);
 	for (i in fire) context.drawImage (fireImg, fire[i].x, fire[i].y, 30, 30);
 	for (i in aster) context.drawImage (asterImg, aster[i].x, aster[i].y, 100, 100);
 	for (i in expl) //рисуем взрывы
