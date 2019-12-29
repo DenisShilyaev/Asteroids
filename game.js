@@ -8,22 +8,20 @@ var timer = 0;
 var ship = {x:300, y:300, animx:0,animy:0};
 
 var fonImg = new Image ();
-fonImg.src = 'fon.jpg';
+fonImg.src = 'img/fon.jpg';
 
 var shipImg = new Image ();
-shipImg.src = 'ship.png';
-
+shipImg.src = 'img/ship.png';
 var shieldImg 	= new Image();
-shieldImg.src = 'shield.png';
-
+shieldImg.src = 'img/shield.png';
 var fireImg = new Image ();
-fireImg.src = 'fire.png';
+fireImg.src = 'img/fire.png';
 
 var asterImg = new Image ();
-asterImg.src = 'aster.png';
+asterImg.src = 'img/aster.png';
 
 var explImg = new Image ();
-explImg.src = 'expl.png';
+explImg.src = 'img/expl.png';
 
 canvas.addEventListener ("mousemove", function(event) {
 	ship.x = event.offsetX-25;
