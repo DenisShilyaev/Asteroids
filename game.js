@@ -1,26 +1,26 @@
-var canvas = document.getElementById ( 'game' );
-var context = canvas.getContext ( '2d' );
+let canvaslet = document.getElementById ( 'game' );
+let context = canvas.getContext ( '2d' );
 
-var aster = []; 
-var fire = [];
-var expl = [];
-var timer = 0;
-var ship = {x:300, y:300, animx:0,animy:0};
+let aster = []; 
+let fire = [];
+let expl = [];
+let timer = 0;
+let ship = {x:300, y:300, animx:0,animy:0};
 
-var fonImg = new Image ();
+let fonImg = new Image ();
 fonImg.src = 'img/fon.jpg';
 
-var shipImg = new Image ();
+let shipImg = new Image ();
 shipImg.src = 'img/ship.png';
-var shieldImg 	= new Image();
+let shieldImg 	= new Image();
 shieldImg.src = 'img/shield.png';
-var fireImg = new Image ();
+let fireImg = new Image ();
 fireImg.src = 'img/fire.png';
 
-var asterImg = new Image ();
+let asterImg = new Image ();
 asterImg.src = 'img/aster.png';
 
-var explImg = new Image ();
+let explImg = new Image ();
 explImg.src = 'img/expl.png';
 
 canvas.addEventListener ("mousemove", function(event) {
@@ -110,7 +110,7 @@ function render () {
 }
 
 
-var requestAnimFrame = (function () {
+let requestAnimFrame = (function () {
 	return window.requestAnimationFrame    || 
 		window.webkitRequestAnimationFrame ||
 		window.mozRequestAnimationFrame    ||
